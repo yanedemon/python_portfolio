@@ -6,6 +6,15 @@ import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import design
+import rm_db
+
+driver = webdriver.Chrome()
+action = ActionChains(driver)
+
+now = datetime.datetime.now()
+day = now.day
+month = now.month
+year = now.year
 
 class ExampleApp(QtWidgets.QMainWindow, design.Ui_Form):
     def __init__(self):
@@ -23,17 +32,14 @@ def main():
     window.show()
     app.exec_()
 
-
-driver = webdriver.Chrome()
-action = ActionChains(driver)
-
-now = datetime.datetime.now()
-day = now.day
-month = now.month
-year = now.year
-
-login_rm = '###'
-password_rm = '###'
+def firstLogin():
+    if rm_db.login == 'null' and rm_db.password == 'null':
+        var_login = 'login = ' + input('Введите имя пользователя: ')
+        var_password = '\npassword = ' + input('Введите пароль: ')
+        f = open('rm_db.py', 'w')
+        f.write(var_login)
+        f.write(var_password)
+        f.close()
 
 def dataVerify():
     global day
@@ -89,8 +95,8 @@ def openBrowser():
     driver.get('https://mep-check.rm.mosreg.ru/')
 
 def loginInRM():
-    driver.find_element_by_name('username').send_keys(login_rm)
-    driver.find_element_by_name('password').send_keys(password_rm)
+    driver.find_element_by_name('username').send_keys(rm_db.login)
+    driver.find_element_by_name('password').send_keys(rm_db.password)
     driver.find_element_by_name('login').click()
 
 def startWorking():
@@ -122,13 +128,15 @@ def startWorking():
     driver.find_element_by_name('commit').click()
 
 #main()
+firstLogin()
 openBrowser()
 loginInRM()
-startWorking()
+#startWorking()
 
 ### TODO:
 ### Запилить гуи
-### Также нужно принимать логин и пароль от пользователя в гуи
-### И хранить его отдельной переменной, чтобы не вводить каждый раз
+### Устранить передачу 'null'ов в качестве пароля/логина при первом запуске
+### Добавить кавычки по дефолту
+### Добавить возможность сброса пароля и ввода по новой
 ### ????
 ### PROFIT!!
