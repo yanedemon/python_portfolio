@@ -2,7 +2,14 @@
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import requests
 
+session = requests.Session()
+session.post('https://admin.dobrodel.mosreg.ru/', {'email': 'it-otdel@solreg.ru', 'password': 'soln141500'})
+html = urlopen('https://admin.dobrodel.mosreg.ru/CardEditListExt?show=/Topic?id=3616609')
+bsObj = BeautifulSoup(html.read())
+title = bsObj.findAll('div')
+print(title)
 # lesson 1 - первый взгляд на bs4
 # def getTitle(url):
 #     try:
@@ -59,3 +66,11 @@ from bs4 import BeautifulSoup
 
 # lesson 5 - lambda
 # soup.findAll(lambda tag: len(tag.attrs) == 2) - извлечь все теги, у которых два атрибута
+
+
+#lesson 6 - краулинг - не подключает к википедии
+# html = urlopen('http://en.wikipedia.org/wiki/Kevin_Bacon')
+# bsObj = BeautifulSoup(html)
+# for link in bsObj.findALl('a'):
+#     if 'href' in link.attrs:
+#         print(link.attrs['href'])
