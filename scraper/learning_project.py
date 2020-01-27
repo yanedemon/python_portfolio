@@ -40,12 +40,22 @@ from bs4 import BeautifulSoup
 # keyword .findAll(id = 'text') - выбор тегов с конкретным атрибутом
 
 
-# lesson 3 - навегация по дереву на примере интернет-магазина
-html = urlopen('http://www.pythonscraping.com/pages/page3.html')
-bsObj = BeautifulSoup(html)
-
-for sibling in bsObj.find('table', {'id': 'giftList'}).tr.next_siblings:
-    print(sibling)
+# lesson 3 - навигация по дереву на примере интернет-магазина
+# html = urlopen('http://www.pythonscraping.com/pages/page3.html')
+# bsObj = BeautifulSoup(html)
+# print(bsObj.find('img', {'src':'../img/gifts/img1.jpg'}).parent.previous_sibling.get_text())
 
 # дочерние теги всегда на 1 уровень родительского тега, теги-потомки на любой уровень ниже родительского тега
 # код выше выводит список строк с названиями продуктов таблицы giftList
+
+
+# lesson 4 - regexp
+# import re
+# html = urlopen('http://www.pythonscraping.com/pages/page3.html')
+# bsObj = BeautifulSoup(html)
+# images = bsObj.findAll('img', {'src':re.compile('\.\.\/img\/gifts/img.*\.jpg')})
+# for image in images:
+#     print(image['src'])
+
+# lesson 5 - lambda
+# soup.findAll(lambda tag: len(tag.attrs) == 2) - извлечь все теги, у которых два атрибута
