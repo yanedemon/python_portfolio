@@ -3,9 +3,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 import datetime
 import time
-from PyQt5 import QtCore, QtGui, QtWidgets
-import sys
-import design
 import rm_db
 
 driver = webdriver.Chrome()
@@ -16,27 +13,11 @@ day = now.day
 month = now.month
 year = now.year
 
-class ExampleApp(QtWidgets.QMainWindow, design.Ui_Form):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-        self.btn_today.clicked.connect(self.select_today)
-
-    def select_today(self):
-        openBrowser()
-        loginInRM()
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    window = ExampleApp()
-    window.show()
-    app.exec_()
-
 def firstLogin():
     if rm_db.login == 'null' and rm_db.password == 'null':
-        var_login = 'login = ' + input('Введите имя пользователя: ')
-        var_password = '\npassword = ' + input('Введите пароль: ')
         f = open('rm_db.py', 'w')
+        var_login = 'login = ' + "'" + input('Введите имя пользователя: ') + "'"
+        var_password = '\npassword = ' + "'" + input('Введите пароль: ') + "'"
         f.write(var_login)
         f.write(var_password)
         f.close()
@@ -91,10 +72,8 @@ def inputDate():
         print('Неправильное значение.')
         inputDate()
 
-def openBrowser():
-    driver.get('https://mep-check.rm.mosreg.ru/')
-
 def loginInRM():
+    driver.get('https://mep-check.rm.mosreg.ru/')
     driver.find_element_by_name('username').send_keys(rm_db.login)
     driver.find_element_by_name('password').send_keys(rm_db.password)
     driver.find_element_by_name('login').click()
@@ -127,16 +106,12 @@ def startWorking():
     driver.find_element_by_id('issue_tracker_id').send_keys(Keys.RETURN)
     driver.find_element_by_name('commit').click()
 
-#main()
 firstLogin()
-openBrowser()
 loginInRM()
-#startWorking()
+startWorking()
 
 ### TODO:
-### Запилить гуи
 ### Устранить передачу 'null'ов в качестве пароля/логина при первом запуске
-### Добавить кавычки по дефолту
 ### Добавить возможность сброса пароля и ввода по новой
 ### ????
 ### PROFIT!!
