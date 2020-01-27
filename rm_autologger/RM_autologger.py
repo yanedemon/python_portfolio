@@ -13,15 +13,6 @@ day = now.day
 month = now.month
 year = now.year
 
-def firstLogin():
-    if rm_db.login == 'null' and rm_db.password == 'null':
-        f = open('rm_db.py', 'w')
-        var_login = 'login = ' + "'" + input('Введите имя пользователя: ') + "'"
-        var_password = '\npassword = ' + "'" + input('Введите пароль: ') + "'"
-        f.write(var_login)
-        f.write(var_password)
-        f.close()
-
 def dataVerify():
     global day
     if day == 1:
@@ -73,6 +64,12 @@ def inputDate():
         inputDate()
 
 def loginInRM():
+    if rm_db.login == 'null' and rm_db.password == 'null':
+        f = open('rm_db.py', 'w')
+        var_login = 'login = ' + "'" + input('Введите имя пользователя: ') + "'"
+        var_password = '\npassword = ' + "'" + input('Введите пароль: ') + "'"
+        f.write(var_login)
+        f.write(var_password)
     driver.get('https://mep-check.rm.mosreg.ru/')
     driver.find_element_by_name('username').send_keys(rm_db.login)
     driver.find_element_by_name('password').send_keys(rm_db.password)
@@ -106,7 +103,6 @@ def startWorking():
     driver.find_element_by_id('issue_tracker_id').send_keys(Keys.RETURN)
     driver.find_element_by_name('commit').click()
 
-firstLogin()
 loginInRM()
 startWorking()
 
