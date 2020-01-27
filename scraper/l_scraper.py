@@ -3,7 +3,7 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-# lesson 1
+# lesson 1 - первый взгляд на bs4
 # def getTitle(url):
 #     try:
 #         html = urlopen(url) #инициируем переменную html методом urlopen
@@ -22,14 +22,14 @@ from bs4 import BeautifulSoup
 #     print(title) #печатаем заголовок
 
 
-# lesson 2
-html = urlopen('http://pythonscraping.com/pages/warandpeace.html') #получаем ссылку
-bsObj = BeautifulSoup(html)
-nameList = bsObj.findAll('span', {'class': 'green'})
-#nameList = bsObj.findAll(text = 'the prince')
-#print(len(nameList)) #частота вхождений текста the prince
-for name in nameList:
-    print(name.get_text()) #циклом печатаем их
+# lesson 2 - аргументы .find & .findAll
+# html = urlopen('http://pythonscraping.com/pages/warandpeace.html') #получаем ссылку
+# bsObj = BeautifulSoup(html)
+# nameList = bsObj.findAll('span', {'class': 'green'})
+# #nameList = bsObj.findAll(text = 'the prince')
+# #print(len(nameList)) #частота вхождений текста the prince
+# for name in nameList:
+#     print(name.get_text()) #циклом печатаем их
 
 # аргументы .find & .findAll:
 # tag .findAll({'h1', 'h2', 'h3'}) - вернуть список всех тегов заголовков
@@ -38,3 +38,14 @@ for name in nameList:
 # text .findAll(text = 'smthng') - ищет вхождение текста внутри тегов страницы
 # limit .find = .findAll(limit == 1) - устанавливает ограничение на поиск значений
 # keyword .findAll(id = 'text') - выбор тегов с конкретным атрибутом
+
+
+# lesson 3 - навегация по дереву на примере интернет-магазина
+html = urlopen('http://www.pythonscraping.com/pages/page3.html')
+bsObj = BeautifulSoup(html)
+
+for sibling in bsObj.find('table', {'id': 'giftList'}).tr.next_siblings:
+    print(sibling)
+
+# дочерние теги всегда на 1 уровень родительского тега, теги-потомки на любой уровень ниже родительского тега
+# код выше выводит список строк с названиями продуктов таблицы giftList
