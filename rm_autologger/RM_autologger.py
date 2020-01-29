@@ -8,8 +8,8 @@ import rm_db
 driver = webdriver.Chrome()
 action = ActionChains(driver)
 
-now = datetime.datetime.now()
 day = now.day
+now = datetime.datetime.now()
 month = now.month
 year = now.year
 
@@ -105,6 +105,8 @@ def startWorking():
 
 loginInRM()
 startWorking()
+
+
 
 ### TODO:
 ### Устранить передачу 'null'ов в качестве пароля/логина при первом запуске

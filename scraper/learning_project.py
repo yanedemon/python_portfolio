@@ -2,14 +2,7 @@
 
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-import requests
 
-session = requests.Session()
-session.post('https://admin.dobrodel.mosreg.ru/', {'email': 'it-otdel@solreg.ru', 'password': 'soln141500'})
-html = urlopen('https://admin.dobrodel.mosreg.ru/CardEditListExt?show=/Topic?id=3616609')
-bsObj = BeautifulSoup(html.read())
-title = bsObj.findAll('div')
-print(title)
 # lesson 1 - первый взгляд на bs4
 # def getTitle(url):
 #     try:
@@ -74,3 +67,24 @@ print(title)
 # for link in bsObj.findALl('a'):
 #     if 'href' in link.attrs:
 #         print(link.attrs['href'])
+
+# lesson 7 - куки
+# import requests
+#
+# params = {'username': 'Ryan', 'password': 'password'}
+# r = requests.post('http://pythonscraping.com/pages/cookies/welcome.php', params)
+# print('Cooke is set to: ')
+# print(r.cookies.get_dict())
+# print('------------------')
+# print('Going to profile page...')
+# r = requests.get('http://pythonscraping.com/pages/cookies/profile.php', cookies = r.cookies)
+# print(r.text)
+
+# lesson 8 - selenium
+# from selenium import webdriver
+# import time
+# driver = webdriver.Chrome()
+# driver.get('http://pythonscraping.com/pages/javascript/ajaxDemo.html')
+# time.sleep(3)
+# print(driver.find_element_by_id('content').text)
+# driver.close()
