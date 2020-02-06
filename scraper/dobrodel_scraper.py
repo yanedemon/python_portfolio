@@ -9,12 +9,20 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ActionChains
 
-params = {'j_username': 'it-otdel@solreg.ru', 'j_password': 'soln141500'}
-r = requests.post('http://admin.dobrodel.mosreg.ru/login', params)
-print('Cookie is set to: ')
-print(r.cookies.get_dict())
-print('------------------')
-print('Going to profile page...')
-r = requests.get('http://admin.dobrodel.mosreg.ru/CardEditListExt', cookies = r.cookies)
-print(r.text)
+driver = webdriver.PhantomJS()
+action = ActionChains(driver)
+
+dobrodel_login = 'it-otdel@solreg.ru'
+dobrodel_password = 'soln141500'
+
+def loginInDobrodel():
+    driver.get('https://admin.dobrodel.mosreg.ru/')
+    driver.find_element_by_name('j_username').send_keys(dobrodel_login)
+    driver.find_element_by_name('j_password').send_keys(dobrodel_password)
+    driver.find_element_by_id('loginSubmit').click()
+
+def startScraping():
