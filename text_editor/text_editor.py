@@ -9,6 +9,16 @@ def create_new_file():
     filename = 'Безымянный'
     text.delete('1.0', tkinter.END)
 
+def open_file():
+    global filename
+    input = open_file_dialog(mode = 'r')
+    if input is None:
+        return
+    filename = input.name
+    data = input.read()
+    text.delete('1.0', tkinter.END)
+    text.insert('1.0', data)
+
 def save_file():
     data = text.get('1.0', tkinter.END)
     save = open(filename, 'w')
@@ -23,34 +33,25 @@ def save_as():
     except Exception:
         showerror(title = 'Ошибка', message = 'Невозможно сохранить файл')
 
-def open_file():
-    global filename
-    input = open_file_dialog(mode = 'r')
-    if input is None:
-        return
-    filename = input.name
-
-    data = input.read()
-    text.delete('1.0', tkinter.END)
-    text.insert('1.0', data)
-
-root = tkinter.Tk()
-root.title("Simple text editor")
-root.minsize(width = 800, height = 600)
-root.maxsize(width = 1000, height = 800)
-
-text = tkinter.Text(root, width = 800, height = 600)
+window = tkinter.Tk()
+window.title("Simple text editor")
+window.minsize(width = 20, height = 20)
+window.maxsize(width = 1920, height = 1080)
+text = tkinter.Text(window, width = 800, height = 600, bg = 'black', fg = 'white')
 text.pack()
-
-menuBar = tkinter.Menu(root)
+menuBar = tkinter.Menu(window)
 fileMenu = tkinter.Menu(menuBar)
 fileMenu.add_command(label = 'Создать файл', command = create_new_file)
 fileMenu.add_command(label = 'Открыть файл', command = open_file)
 fileMenu.add_command(label = 'Сохранить', command = save_file)
 fileMenu.add_command(label = 'Сохранить как', command = save_as)
 fileMenu.add_separator()
-fileMenu.add_command(label = 'Выход', command = root.quit)
+fileMenu.add_command(label = 'Выход', command = window.quit)
 menuBar.add_cascade(label = 'Файл', menu = fileMenu)
+window.config(menu = menuBar)
 
-root.config(menu = menuBar)
-root.mainloop()
+window.mainloop()
+
+## TODO: Добавить горячие клавиши;
+##       добавить скроллбар;
+##       глянуть как работают теги
