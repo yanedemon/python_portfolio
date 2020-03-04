@@ -1,81 +1,71 @@
-from tkinter import *
-from tkinter import filedialog, ttk
-import os
+import tkinter
+from tkinter.filedialog import asksaveasfile, askopenfile
+from tkinter.messagebox import showerror
+from tkinter import scrolledtext
 
-class App():
-    def __init__(self):
-        title = 'Новый документ'
-        self.root = Tk()
-        self.root.geometry('600x400')
-        self.root.title(title)
-        self.tabs = {'ky': 0}
-        self.tab_list = []
-        self.notebook = ttk.Notebook(self.root)
-        self.notebook.pack(expand = True, fill = 'both')
-        menubar = Menu(self.root)
-        filemenu = Menu(menubar, tearoff = 0)
-        filemenu.add_command(label = 'Создать', command = self.generate_tab)
-        filemenu.add_command(label = 'Открыть', command = self.open_file)
-        filemenu.add_command(label = 'Сохранить', command = self.save_file)
-        filemenu.add_separator()
-        filemenu.add_command(label = 'Выйти', command = self.root.quit)
-        menubar.add_cascade(label = 'Файл', menu = filemenu)
-        editmenu = Menu(menubar, tearoff = 0)
-        editmenu.add_command(label = 'Отменить')
-        editmenu.add_command(label = 'Повторить')
-        editmenu.add_separator()
-        menubar.add_cascade(label = 'Правка', menu = editmenu)
-        self.root.config(menu = menubar)
+filename = tkinter.NONE
 
-    def open_file(self):
-        file = open(filedialog.askopenfilename(), 'r+')
-        text_value = file.read()
-        self.textWidget.delete(1.0, 'end-1c')
-        self.textWidget.insert('end-1c', text_value)
-        title = os.path.basename(file.name)
-        self.root.title(title)
-        file.close()
+def create_new_file():
+    global filename
+    filename = 'Безымянный'
+    text.delete('1.0', tkinter.END)
 
-    def add_tab(self, name):
-        tab = Tab(self.notebook, name)
-        print(name)
-        self.notebook.add(tab, text = name)
-        self.tab_list.append(tab)
+def open_file():
+    global filename
+    input = askopenfile(mode = 'r')
+    if input is None:
+        return
+    filename = input.name
+    data = input.read()
+    text.delete('1.0', tkinter.END)
+    text.insert('1.0', data)
 
-    def save_file(self):
-        tab_to_save = self.get_tab()
-        print(tab_to_save)
-        tab_to_save.save_tab()
+def save_file():
+    data = text.get('1.0', tkinter.END)
+    save = open(filename, 'w')
+    save.write(data)
+    save.close()
 
-    def get_tab(self):
-        print(self.notebook.index('current'))
-        tab = self.tab_list[self.notebook.index('current')]
-        return tab
+def save_as():
+    save = asksaveasfile(mode='w', defaultextension='.txt')
+    data = text.get('1.0', tkinter.END)
+    try:
+        out.write(data.rstrip())
+    except Exception:
+        showerror(title = 'Ошибка', message = 'Невозможно сохранить файл')
 
-    def generate_tab(self):
-        if self.tabs['ky'] < 20:
-            self.tabs['ky'] += 1
-            self.add_tab('Документ ' + str(self.tabs['ky']))
+def selectAll(event):
+    window.after(10, select_all, event.widget)
 
-    def run(self):
-        self.root.mainloop()
+def select_all(widget):
+    widget.selection_range(0, END)
+    widget.icursor(END)
 
-class Tab(Frame):
-    def __init__(self, root, name):
-        Frame.__init__(self, root)
-        self.root = root
-        self.name = name
-        self.textWidget = Text(self, font = ('Trebuchet MS', 12))
-        self.textWidget.pack(expand = True, fill = 'both')
+window = tkinter.Tk()
+window.title("Simple text editor")
+window.minsize(width = 400, height = 400)
+window.maxsize(width = 800, height = 800)
 
-    def save_tab(self):
-        print(self.textWidget.get('1.0', 'end-1c'))
-        file = open(filedialog.asksaveasfilename() + '.txt', 'w+')
-        file.write(self.textWidget.get('1.0', 'end-1c'))
-        print(os.path.basename(file.name))
-        title = os.path.basename(file.name)
-        file.close()
+text = scrolledtext.ScrolledText(window, width = 400, height = 400, bg = 'black', fg = 'white', font = ('Trebuchet MS', 12), wrap = tkinter.WORD)
+text.pack(side = tkinter.LEFT)
 
-if __name__ == '__main__':
-    app1 = App()
-    app1.run()
+menuBar = tkinter.Menu(window)
+fileMenu = tkinter.Menu(menuBar)
+fileMenu.add_command(label = 'Создать файл', command = create_new_file)
+fileMenu.add_command(label = 'Открыть файл', command = open_file)
+fileMenu.add_command(label = 'Сохранить', command = save_file)
+fileMenu.add_command(label = 'Сохранить как', command = save_as)
+fileMenu.add_command(label = 'Выход', command = window.quit)
+menuBar.add_cascade(label = 'Файл', menu = fileMenu)
+
+window.config(menu = menuBar)
+
+select_all_hotkey = tkinter.Entry(width = 40)
+select_all_hotkey.focus_set()
+select_all_hotkey.pack()
+select_all_hotkey.bind('<Control-a>', selectAll)
+
+window.event_add('<<Copy>>', '<Control-ntilde>')
+window.event_add('<<Paste>>', '<Control-igrave>')
+
+window.mainloop()
