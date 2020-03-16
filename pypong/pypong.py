@@ -1,28 +1,44 @@
 from tkinter import *
 
-width = 900
-height = 300
-
-pad_width = 10
-pad_height = 100
+desk_width, desk_height = 900, 300
+pad_width, pad_height = 10, 100
 ball_radius = 30
 
 window = Tk()
 window.title("PyPong")
 
-c = Canvas(window, width = width, height = height, background = "#003300")
-c.pack()
+desk_canvas = Canvas(window, width = desk_width,
+                     height = desk_height, background = "#003300")
 
-c.create_line(pad_width, 0, pad_width, height, fill = "white")
-c.create_line(width - pad_width, 0, width - pad_width, height, fill = "white")
-c.create_line(width / 2, 0, width / 2, height, fill = "white")
+desk_canvas.pack()
+desk_canvas.create_line(pad_width, 0, pad_width, desk_height, fill = "white")
+desk_canvas.create_line(desk_width - pad_width, 0, desk_width - pad_width,
+                        desk_height, fill = "white")
 
-ball = c.create_oval(width / 2-ball_radius / 2,
-                     height / 2 - ball_radius / 2,
-                     width / 2 + ball_radius / 2,
-                     height / 2 + ball_radius / 2, fill = "white")
+desk_canvas.create_line(desk_width / 2, 0, desk_width / 2,
+                        desk_height, fill = "white")
 
-left_pad = c.create_line(pad_width / 2, 0, pad_width / 2, pad_height, width = pad_width, fill = "yellow")
-right_pad = c.create_line(width - pad_width / 2, 0, width - pad_width / 2, pad_height, width = pad_width, fill = "yellow")
+ball = desk_canvas.create_oval(desk_width / 2 - ball_radius / 2,
+                               desk_height / 2 - ball_radius / 2,
+                               desk_width / 2 + ball_radius / 2,
+                               desk_height / 2 + ball_radius / 2, fill = "white")
+
+left_pad = desk_canvas.create_line(pad_width / 2, 0, pad_width / 2, pad_height,
+                                   width = pad_width, fill = "yellow")
+
+right_pad = desk_canvas.create_line(desk_width - pad_width / 2, 0,
+                                    desk_width - pad_width / 2, pad_height,
+                                    width = pad_width, fill = "yellow")
+
+x_move, y_move = 20, 0
+
+def move_ball():
+    c.move(ball, x_move, y_move)
+
+def main():
+    move_ball()
+    window.after(30, main)
+    
+main()
 
 window.mainloop()
