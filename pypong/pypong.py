@@ -1,4 +1,5 @@
 from tkinter import *
+import random
 
 desk_width, desk_height = 900, 300
 pad_width, pad_height = 10, 100
@@ -75,8 +76,47 @@ def stop_pad(event):
 
 desk_canvas.bind('<KeyRelease>', stop_pad)
 
+ball_speed_up = 1.05
+max_ball_speed = 40
+x_speed = 20
+y_speed = 20
+right_line_distance = width - pad_width
+
+def bounce(action):
+    global x_speed, y_speed
+    if action == 'strike':
+        y_speed = random.randrange(-10, 10)
+        if abs(x_speed) < max_ball_speed:
+            x_speed *= - ball_speed_up
+        else:
+            x_speed = - x_speed
+    else:
+        y_speed = - y_speed
+
 def move_ball():
-    desk_canvas.move(ball, x_move, y_move)
+    ball_left, ball_top, ball_right, ball_bot = desk_canvas.coords(ball)
+    ball_center = (ball_top + ball_bot) / 2
+    if ball_right + x_speed < right_line_distance and \
+            ball_left + x_speed > pad_width:
+        desk_canvas.move(ball, x_speed, y_speed)
+    elif ball_right == right_line_distance or ball_left == pad_width:
+        if ball_right > wid / 2:
+            if desk_canvas.coords(right_pad)[1] < ball_center < desk_canvas.coords(right_pad)[3]:
+                bounce('strike')
+            else:
+                pass
+        else:
+            if desk_canvas.coords(left_pad)[1] < ball_center < desk_canvas.coords(left_pad)[3]:
+                bounce('strike')
+            else:
+                pass
+    else:
+        if ball_right > width / 2:
+            desk_canvas.move(ball, right_line_distance - ball_right, y_speed)
+        else:
+            desk_canvas.move(ball, - ball_left + pad_width, y_speed)
+    if ball_top + y_speed < 0 or ball_bot + y_speed > height:
+        bounce('ricochet')
 
 main()
 
