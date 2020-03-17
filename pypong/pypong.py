@@ -10,7 +10,7 @@ ball_speed_up = 1.05
 max_ball_speed = 40
 x_speed = 20
 y_speed = 20
-right_line_distance = width - pad_width
+right_line_distance = desk_width - pad_width
 x_move, y_move = 20, 0
 default_pad_speed = 20
 left_pad_speed = 0
@@ -42,12 +42,12 @@ right_pad = desk_canvas.create_line(desk_width - pad_width / 2, 0,
                                     desk_width - pad_width / 2, pad_height,
                                     width = pad_width, fill = 'yellow')
 
-p_1_text = desk_canvas.create_text(width - width / 6, pad_height / 4,
+p_1_text = desk_canvas.create_text(desk_width - desk_width / 6, pad_height / 4,
                          text = player_1_score,
                          font = 'Arial 20',
                          fill = 'white')
 
-p_2_text = desk_canvas.create_text(width / 6, pad_height / 4,
+p_2_text = desk_canvas.create_text(desk_width / 6, pad_height / 4,
                           text = player_2_score,
                           font = 'Arial 20',
                           fill = 'white')
@@ -59,8 +59,8 @@ def move_pads():
         desk_canvas.move(pad, 0, pads[pad])
         if desk_canvas.coords(pad)[1] < 0:
             desk_canvas.move(pad, 0, - desk_canvas.coords(pad)[1])
-        elif desk_canvas.coords(pad)[3] > height:
-            desk_canvas.move(pad, 0, height - desk_canvas.coords(pad)[3])
+        elif desk_canvas.coords(pad)[3] > desk_height:
+            desk_canvas.move(pad, 0, desk_height - desk_canvas.coords(pad)[3])
 
 def main():
      move_ball()
@@ -109,7 +109,7 @@ def move_ball():
             ball_left + x_speed > pad_width:
         desk_canvas.move(ball, x_speed, y_speed)
     elif ball_right == right_line_distance or ball_left == pad_width:
-        if ball_right > wid / 2:
+        if ball_right > desk_width / 2:
             if desk_canvas.coords(right_pad)[1] < ball_center < desk_canvas.coords(right_pad)[3]:
                 bounce('strike')
             else:
@@ -122,28 +122,28 @@ def move_ball():
                 update_score('right')
                 spawn_ball()
     else:
-        if ball_right > width / 2:
+        if ball_right > desk_width / 2:
             desk_canvas.move(ball, right_line_distance - ball_right, y_speed)
         else:
             desk_canvas.move(ball, - ball_left + pad_width, y_speed)
-    if ball_top + y_speed < 0 or ball_bot + y_speed > height:
+    if ball_top + y_speed < 0 or ball_bot + y_speed > desk_height:
         bounce('ricochet')
 
 def update_score(player):
     global player_1_score, player_2_score
     if player == 'right':
         player_1_score += 1
-        c.itemconfig(p_1_text, text = player_1_score)
+        desk_canvas.itemconfig(p_1_text, text = player_1_score)
     else:
         player_2_score += 1
-        c.itemconfig(p_2_text, text = player_2_score)
+        desk_canvas.itemconfig(p_2_text, text = player_2_score)
 
 def spawn_ball():
     global x_speed
-    c.coords(ball, width / 2 - ball_radius / 2,
-             height / 2 - ball_radius / 2,
-             width / 2 + ball_radius / 2,
-             height / 2 + ball_radius / 2)
+    desk_canvas.coords(ball, desk_width / 2 - ball_radius / 2,
+             desk_height / 2 - ball_radius / 2,
+             desk_width / 2 + ball_radius / 2,
+             desk_height / 2 + ball_radius / 2)
     x_speed = - (x_speed * - initial_speed) / abs(x_speed)
 
 main()
