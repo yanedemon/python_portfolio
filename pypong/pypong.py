@@ -33,7 +33,7 @@ right_pad = desk_canvas.create_line(desk_width - pad_width / 2, 0,
 x_move, y_move = 20, 0
 
 def move_ball():
-    c.move(ball, x_move, y_move)
+    desk_canvas.move(ball, x_move, y_move)
 
 def main():
     move_ball()
