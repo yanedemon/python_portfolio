@@ -4,6 +4,8 @@ import random
 desk_width, desk_height = 900, 300
 pad_width, pad_height = 10, 100
 ball_radius = 30
+player_1_score, player_2_score = 0, 0
+initial_speed = 20
 
 window = Tk()
 window.title('PyPong')
@@ -104,12 +106,14 @@ def move_ball():
             if desk_canvas.coords(right_pad)[1] < ball_center < desk_canvas.coords(right_pad)[3]:
                 bounce('strike')
             else:
-                pass
+                update_score('left')
+                spawn_ball()
         else:
             if desk_canvas.coords(left_pad)[1] < ball_center < desk_canvas.coords(left_pad)[3]:
                 bounce('strike')
             else:
-                pass
+                update_score('right')
+                spawn_ball()
     else:
         if ball_right > width / 2:
             desk_canvas.move(ball, right_line_distance - ball_right, y_speed)
@@ -117,6 +121,33 @@ def move_ball():
             desk_canvas.move(ball, - ball_left + pad_width, y_speed)
     if ball_top + y_speed < 0 or ball_bot + y_speed > height:
         bounce('ricochet')
+
+def update_score(player):
+    global PLAYER_1_SCORE, PLAYER_2_SCORE
+    if player == "right":
+        PLAYER_1_SCORE += 1
+        c.itemconfig(p_1_text, text=PLAYER_1_SCORE)
+    else:
+        PLAYER_2_SCORE += 1
+        c.itemconfig(p_2_text, text=PLAYER_2_SCORE)
+
+def spawn_ball():
+    global x_speed
+    c.coords(ball, width / 2 - ball_radius / 2,
+             height / 2 - ball_radius / 2,
+             width / 2 + ball_radius / 2,
+             height / 2 + ball_radius / 2)
+    x_speed = - (x_speed * - initial_speed) / abs(x_speed)
+
+p_1_text = desk_canvas.create_text(width - width / 6, pad_height / 4,
+                         text = player_1_score,
+                         font = 'Arial 20',
+                         fill = 'white')
+
+p_2_text = desk_canvas.create_text(width / 6, pad_height / 4,
+                          text = player_2_score,
+                          font = 'Arial 20',
+                          fill = 'white')
 
 main()
 
